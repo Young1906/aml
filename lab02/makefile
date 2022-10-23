@@ -1,6 +1,6 @@
 dev:
 	echo "[+] THIS IS DEV ENV";
-	python TRIPLET/dataset.py
+	python src/pipeline.py
 
 
 
