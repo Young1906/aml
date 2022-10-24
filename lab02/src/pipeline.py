@@ -17,32 +17,49 @@ def resize(
 
     return layer(X)
 
-def augment(
+def f_augment(
         X                       : tf.Tensor,
-        random_constrast_factor : float):
+        **kwargs): 
 
-    augment_layer = tf.keras.layers.RandomContrast(random_contrast_factor, seed = 2022)
-    # X = tf.image.random_contrast(X, .5, 1.5)
-    return augment_layer(X)
+    augment = tf.keras.Sequential([
+        tf.keras.layers.RandomContrast(factor = kwargs.get("random_contrast_factor")),
+        tf.keras.layers.RandomFlip(mode = kwargs.get("flip_mode")),
+    ])
+    return augment(X)
 
 
 def pipeline(
         path                    : str,
         input_size              : List[int],
-        random_contrast_factor  : float)->tf.Tensor:
+        augment                 : bool      = False,
+        **kwargs
+    )->tf.Tensor:
     """
-    Description
+    Description:
+        + read file into numpy array from path
+        + pixel normalization
+        + augmentation
     
     Arg
+        + path                  <str>               : path to image
+        + input_size            <list<int>>         : image size to fit into the network
+        + augment               <bool>              : whether to augment the image
+        + **kwargs                                  : augmentation's parameters
     """
     X = np.array(Image.open(path));
+
+    # Pixel normalization
     X = X / 255. # Pixel normaliztion
+
+    # Convert to gray_scale image
+    X = tf.image.rgb_to_grayscale(X)
+
+    # Apply augmentation
+    if augment:
+        X = f_augment(X, **kwargs);
 
     # Resize X to network's input's shape
     X = resize(X, input_size)
-
-    # Apply augmentation
-    X = augment(X, random_contrast_factor);
 
     return X
 
@@ -53,6 +70,11 @@ if __name__ == "__main__":
     input_shape = cfg.INPUT_SHAPE
     random_contrast_factor = cfg.RANDOM_CONTRAST_FACTOR
 
-    X = pipeline(sample_path, input_shape, random_contrast_factor);
+    X = pipeline(
+        path = sample_path,
+        input_size = input_shape,
+        augment = True,
+        random_contrast_factor = 0.5,
+        flip_mode = "horizontal_and_vertical");
     plt.imshow(X);
     plt.show();

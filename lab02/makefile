@@ -1,6 +1,20 @@
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
+
+
 dev:
-	echo "[+] THIS IS DEV ENV";
-	python src/pipeline.py
+	python src --SHAPE 1 255 255 3 \
+		--BACKBONE efficientnet \
+		--EMBEDDING_SIZE 256 
+
 
 
 

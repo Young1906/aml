@@ -1,3 +1,4 @@
+from typing import List
 class CateEncoder:
     def __init__(self, X:List[str]):
         X = list(set(X));
