@@ -52,7 +52,7 @@ def pipeline(
     X = X / 255. # Pixel normaliztion
 
     # Convert to gray_scale image
-    X = tf.image.rgb_to_grayscale(X)
+    # X = tf.image.rgb_to_grayscale(X)
 
     # Apply augmentation
     if augment:
@@ -60,6 +60,8 @@ def pipeline(
 
     # Resize X to network's input's shape
     X = resize(X, input_size)
+
+    X = np.expand_dims(X, 0);
 
     return X
 

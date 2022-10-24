@@ -4,11 +4,14 @@ from pipeline import pipeline
 import os, glob
 from utils import CateEncoder 
 import random
+import numpy as np
+from tqdm import tqdm
 
 def triplet_generator(
-        batch_X: List[str],   # List of path to image
-        batch_y: List[int],   # Corresponding label
-        backbone: tf.keras.Model,
+        batch_X             : List[str],   # List of path to image
+        batch_y             : List[int],   # Corresponding label
+        backbone            : tf.keras.Model,
+        input_size          : List[int],
         **kwargs
     ):
     """
@@ -31,7 +34,7 @@ def triplet_generator(
     batch_X = [
             pipeline(
                 path        = x,
-                input_size  = kwargs.get("input_shape"),
+                input_size  = input_size,
                 augment = False)
 
             for x in batch_X
@@ -42,7 +45,7 @@ def triplet_generator(
     # Compute embedding : numpy array to store embedding
     E = np.zeros((N, backbone.embedding_size));
 
-    for (i, X) in enumerate(batch_X):
+    for (i, X) in tqdm(enumerate(batch_X), desc = "Calculing embedding"):
         embedding = backbone(X);
         E[i, :] = embedding.numpy();
 
@@ -54,8 +57,8 @@ def triplet_generator(
         pos_mask = batch_y != batch_y[i];
         neg_mask = batch_y == batch_y[i];
 
-        if pos_mask.sum() == 1: continue; 
         # Skip this image if there is only 1 of its class within this batch
+        if neg_mask.sum() == 1: continue; 
 
         # Distance vector from anchor a to all other image
         D = np.sum((E - a[np.newaxis, :]) * (E - a[np.newaxis, :]), -1);
@@ -71,7 +74,8 @@ def triplet_generator(
 def get_dataset(
         path            : str,
         batch_size      : List[int],
-        backbone        : tf.keras.Model
+        backbone        : tf.keras.Model,
+        input_size      : List[int]
     ):
     """
     pth: path to dataset 
@@ -96,11 +100,14 @@ def get_dataset(
         batch_X = ls_files[i * batch_size : (i+1) * batch_size];
         batch_y = [parse_y(x, ce) for x in batch_X]
 
-        print(batch_y); break
-
         
         # Generate triplet from this mini-batch
-        triplets = batch_generator();
+        triplets = triplet_generator(
+                batch_X         = batch_X,
+                batch_y         = batch_y,
+                backbone        = backbone,
+                input_size      = input_size,
+            );
 
         for triplet in triplets:
             yield triplet
