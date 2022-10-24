@@ -37,6 +37,11 @@ parser.add_argument(
         type = float,
         help = "Margin for Triplet Loss Function")
 
+parser.add_argument(
+        "--BATCH_SIZE_DS",
+        type = int,
+        help = "Actual batch' size during training")
+
 args = parser.parse_args();
 
 if __name__ == "__main__":
@@ -46,5 +51,6 @@ if __name__ == "__main__":
             input_shape         = args.SHAPE,
             backbone_name       = args.BACKBONE,
             embedding_size      = args.EMBEDDING_SIZE,
-            margin              = args.MARGIN)
+            margin              = args.MARGIN,
+            batch_size_ds       = args.BATCH_SIZE_DS)
 

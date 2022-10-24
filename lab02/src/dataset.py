@@ -45,12 +45,17 @@ def triplet_generator(
     # Compute embedding : numpy array to store embedding
     E = np.zeros((N, backbone.embedding_size));
 
-    for (i, X) in tqdm(enumerate(batch_X), desc = "Calculing embedding"):
+    for (i, X) in tqdm(enumerate(batch_X), 
+            desc = "Triplet selection / calculing embedding",
+            leave = False):
         embedding = backbone(X);
         E[i, :] = embedding.numpy();
 
 
-    for i in range(N):
+    for i in tqdm(range(N), 
+            desc = "Triplet selection / select triplet for each image", 
+            leave = False):
+
         a = E[i, :] # Embedding of the anchor;
 
         # Positive & Negative mask;
@@ -69,7 +74,7 @@ def triplet_generator(
         # Negative index
         n = np.argmax(np.ma.masked_array(D, mask = neg_mask));
 
-        yield batch_X[i], batch_X[n], batch_X[p];
+        yield batch_X[i], batch_X[p], batch_X[n];
 
 def get_dataset(
         path            : str,

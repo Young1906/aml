@@ -61,7 +61,7 @@ def pipeline(
     # Resize X to network's input's shape
     X = resize(X, input_size)
 
-    X = np.expand_dims(X, 0);
+    # X = np.expand_dims(X, 0);
 
     return X
 

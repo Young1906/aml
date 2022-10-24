@@ -1,10 +1,11 @@
 dev:
 	python3 src --PATH datasets/lfw_selection \
-		--BATCH_SIZE 6 \
+		--BATCH_SIZE 256 \
 	   	--SHAPE 255 255 3 \
 		--BACKBONE efficientnet \
 		--EMBEDDING_SIZE 256 \
-		--MARGIN .5
+		--MARGIN .5 \
+		--BATCH_SIZE_DS 32
 
 
 

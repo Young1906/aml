@@ -38,6 +38,9 @@ class Backbone(tf.keras.Model):
         ])
 
     def call(self, X):
+        if X.ndim == 3:
+            X = tf.expand_dims(X, 0);
+
         return self.model(X)
 
 
