@@ -1,4 +1,5 @@
 from typing import List
+
 class CateEncoder:
     def __init__(self, X:List[str]):
         X = list(set(X));
@@ -11,3 +12,6 @@ class CateEncoder:
 
     def idx(self, val:str)->int:
         return self.val2idx[val]
+
+    def __call__(self, val:str) -> int:
+        return self.idx(val);

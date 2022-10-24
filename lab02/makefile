@@ -1,19 +1,10 @@
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
-
-
 dev:
-	python src --SHAPE 1 255 255 3 \
+	python3 src --PATH datasets/lfw_selection \
+		--BATCH_SIZE 512 \
+	   	--SHAPE 255 255 3 \
 		--BACKBONE efficientnet \
-		--EMBEDDING_SIZE 256 
+		--EMBEDDING_SIZE 256 \
+		--MARGIN .5
 
 
 

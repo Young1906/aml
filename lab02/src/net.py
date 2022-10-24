@@ -6,21 +6,21 @@ class Backbone(tf.keras.Model):
     def __init__(
             self,
             input_shape         : List[int],
-            name                : str,
+            backbone_name       : str,
             embedding_size      : int):
         super().__init__()
 
-        if name == "inception_v3":
+        if backbone_name == "inception_v3":
             backbone = tf.keras.applications.inception_v3.InceptionV3(
                     include_top = False,
                     input_shape = input_shape
             )
-        elif name == "mobilenet_v2":
+        elif backbone_name == "mobilenet_v2":
             backbone = tf.keras.applications.mobilenet_v2.MobileNetV2(
                     include_top = False,
                     input_shape = input_shape
             )
-        elif name == "efficientnet":
+        elif backbone_name == "efficientnet":
             backbone = tf.keras.applications.efficientnet.EfficientNetB2(
                     include_top = False,
                     input_shape = input_shape)

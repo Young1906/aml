@@ -3,6 +3,7 @@ from typing import List
 from pipeline import pipeline 
 import os, glob
 from utils import CateEncoder 
+import random
 
 def triplet_generator(
         batch_X: List[str],   # List of path to image
@@ -79,17 +80,24 @@ def get_dataset(
     # List of all files
     ls_files = glob.glob(f"{path}/*/*");
 
-    # List of all classes;
-    _target = os.listdir(path);
+    # Shuffle this list;
+    random.shuffle(ls_files);
 
-    print(_target);
-    return
+    # List of all classes;
+    _classes = os.listdir(path);
+
+    # Cate encoder: map value -> idx
+    ce = CateEncoder(_classes);
 
     # Number of batch(s)
     N_BATCHES = len(ls_files) // batch_size + 1;
 
     for i in range(N_BATCHES):
-        batch_files = ls_files[ i * batch_size : (i+1) * batch_size];
+        batch_X = ls_files[i * batch_size : (i+1) * batch_size];
+        batch_y = [parse_y(x, ce) for x in batch_X]
+
+        print(batch_y); break
+
         
         # Generate triplet from this mini-batch
         triplets = batch_generator();
@@ -98,10 +106,12 @@ def get_dataset(
             yield triplet
 
 
-def parse_fn(path, ce):
+def parse_y(path, ce):
     """
     Description
     """
+    _, _, _target, _ = path.split("/");
+    return ce(_target);
 
 if __name__ == "__main__":
     get_dataset(

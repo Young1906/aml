@@ -4,7 +4,6 @@ from pipeline import pipeline
 from net import Backbone, SiameseNet
 from dataset import get_dataset
 
-
 def train(
         path                : str,                  # Path to dataset
         batch_size          : int,                  # Size of mini-batch to generate triplets online
@@ -16,7 +15,7 @@ def train(
     # Construct backbone and siamese network
     backbone = Backbone(
             input_shape     = input_shape,
-            name            = name,
+            backbone_name   = backbone_name,
             embedding_size  = embedding_size);
 
     # siamese
@@ -25,9 +24,13 @@ def train(
             backbone        = backbone);
 
     # dataset
-    get_dataset(
+    gen = get_dataset(
             path            = path,
             batch_size      = batch_size,
-            backbone        = backbone)
+            backbone        = backbone);
+
+
+    for (a, p, n) in gen:
+        break
 
 
