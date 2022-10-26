@@ -48,7 +48,9 @@ def triplet_generator(
     for (i, X) in tqdm(enumerate(batch_X), 
             desc = "Triplet selection / calculing embedding",
             leave = False):
-        embedding = backbone(X);
+        with tf.device("/device:gpu:0"):
+            embedding = backbone(X);
+        
         E[i, :] = embedding.numpy();
 
 
@@ -72,7 +74,7 @@ def triplet_generator(
         p = np.argmax(np.ma.masked_array(D, mask = pos_mask));
 
         # Negative index
-        n = np.argmax(np.ma.masked_array(D, mask = neg_mask));
+        n = np.argmin(np.ma.masked_array(D, mask = neg_mask));
 
         yield batch_X[i], batch_X[p], batch_X[n];
 
@@ -104,7 +106,6 @@ def get_dataset(
     for i in range(N_BATCHES):
         batch_X = ls_files[i * batch_size : (i+1) * batch_size];
         batch_y = [parse_y(x, ce) for x in batch_X]
-
         
         # Generate triplet from this mini-batch
         triplets = triplet_generator(

@@ -1,5 +1,7 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser 
 from train import train
+from matplotlib import pyplot as plt
+import pickle
 
 # Training params:
 parser = ArgumentParser(
@@ -42,15 +44,52 @@ parser.add_argument(
         type = int,
         help = "Actual batch' size during training")
 
+parser.add_argument(
+        "--EPOCH",
+        type = int,
+        help = "Number of epochs")
+
+parser.add_argument(
+        "--N_VALID",
+        type = int,
+        help = "Number of hold-out for validation")
+
+parser.add_argument(
+        "--LEARNING_RATE",
+        type = float,
+        help = "Learning rate")
+
 args = parser.parse_args();
 
 if __name__ == "__main__":
-    train(
+    hist, backbone = train(
             path                = args.PATH,
             batch_size          = args.BATCH_SIZE,  
             input_shape         = args.SHAPE,
             backbone_name       = args.BACKBONE,
             embedding_size      = args.EMBEDDING_SIZE,
             margin              = args.MARGIN,
-            batch_size_ds       = args.BATCH_SIZE_DS)
+            batch_size_ds       = args.BATCH_SIZE_DS,
+            epoch               = args.EPOCH,
+            n_valid             = args.N_VALID,
+            learning_rate       = args.LEARNING_RATE)
+
+    plt.plot(hist["loss"]["train"]);
+    plt.title("Train Loss by Batch");
+    plt.savefig("train_loss.png");
+
+    plt.clf();
+
+    plt.plot(hist["loss"]["valid"]);
+    plt.title("Validation Loss by Epoch")
+    plt.savefig("valid_loss.png");
+
+    # Save loss object
+    with open("hist.pkl", "wb") as f:
+        pickle.dump(hist, f);
+
+    backbone.save_weights(f"checkpoints/{args.BACKBONE}");
+
+
+    
 

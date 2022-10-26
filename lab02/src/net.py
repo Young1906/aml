@@ -70,7 +70,7 @@ class SiameseNet(tf.keras.Model):
         """
         return tf.math.reduce_sum((u - v) * (u - v), -1);
 
-    def triplet_loss(a, p, n):
+    def triplet_loss(self, a, p, n):
         """
         Description:
 
