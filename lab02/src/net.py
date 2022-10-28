@@ -2,6 +2,25 @@ import tensorflow as tf;
 from typing import List
 from matplotlib import pyplot as plt
 
+
+class DenseBatchNorm(tf.keras.layers.Layer):
+    def __init__(
+            self, 
+            unit    : int,
+            rate    : float = .1):
+        super().__init__();
+
+        self.dense = tf.keras.layers.Dense(units = unit);
+        self.bnorm = tf.keras.layers.BatchNormalization();
+        self.drop = tf.keras.layers.Dropout(rate);
+    
+    def call(self, X):
+        out = self.dense(X);
+        out = self.bnorm(out);
+
+        return self.drop(out);
+        
+
 class Backbone(tf.keras.Model):
     def __init__(
             self,
@@ -33,13 +52,11 @@ class Backbone(tf.keras.Model):
         self.model = tf.keras.Sequential([
             self.net,
             tf.keras.layers.GlobalAveragePooling2D(),
-            tf.keras.layers.Dense(embedding_size * 2),
-            tf.keras.layers.Dense(embedding_size)
+            DenseBatchNorm(embedding_size * 2),
+            DenseBatchNorm(embedding_size),
         ])
 
     def call(self, X):
-        if X.ndim == 3:
-            X = tf.expand_dims(X, 0);
 
         return self.model(X)
 
