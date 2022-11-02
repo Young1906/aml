@@ -1,0 +1,6 @@
+FROM tensorflow/tensorflow
+
+WORKDIR /usr/src/app
+RUN pip install Pillow matplotlib tqdm
+
+CMD ["make", "exp2"]

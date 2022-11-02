@@ -1,10 +1,13 @@
 train:
 	docker run --gpus all \
-		-v /home/iamtu/codes/aml/lab02:/usr/src/app/ \
+		-v $(pwd):/usr/src/app/ \
 		-t tf_gpu
 
 build:
 	docker build -t tf_gpu - < dockerfile 
+
+build_cpu:
+	docker build -t tf_cpu - < dockerfile_cpu 
 
 exp2: 
 	make train_exp2 
