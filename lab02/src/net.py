@@ -52,12 +52,12 @@ class Backbone(tf.keras.Model):
         self.model = tf.keras.Sequential([
             self.net,
             tf.keras.layers.GlobalAveragePooling2D(),
-            DenseBatchNorm(embedding_size * 2),
+            DenseBatchNorm(512),
+            DenseBatchNorm(256),
             DenseBatchNorm(embedding_size),
         ])
 
     def call(self, X):
-
         return self.model(X)
 
 
@@ -110,20 +110,3 @@ class SiameseNet(tf.keras.Model):
         """
         a, p, n = self.backbone(A), self.backbone(P), self.backbone(N);
         return self.triplet_loss(a, p, n);
-
-
-
-if __name__ == "__main__":
-    backbone = Backbone((255, 255, 3), "efficientnet", 256);
-    backbone.build((None, 255, 255, 3))
-    print(backbone.summary())
-
-
-    X = tf.random.normal((1, 255, 255, 3));
-    y_hat = backbone(X);
-    print(y_hat.shape);
-
-    X = tf.squeeze(X);
-    plt.imshow(X);
-    plt.show();
-
