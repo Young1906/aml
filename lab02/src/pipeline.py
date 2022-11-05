@@ -28,6 +28,29 @@ def f_augment(
     ])
     return augment(X)
 
+def detect_face(img):
+    faceCascade = cv2.CascadeClassifier("haar/haarcascade_frontalface_alt2.xml");
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY);
+    
+    faces = faceCascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            #flags = cv2.CV_HAAR_SCALE_IMAGE
+            )
+
+    _x, _y, _W, _H = 0, 0, 0, 0;
+
+    # Return the largest face
+    for (x, y, w, h) in faces:
+        if w * h > _W * _H:
+            _x, _y, _W, _H = x, y, w, h;
+
+    return _x, _y, _W, _H
+
+
+
 
 def pipeline(
         path                    : str,
@@ -47,13 +70,24 @@ def pipeline(
         + augment               <bool>              : whether to augment the image
         + **kwargs                                  : augmentation's parameters
     """
-    X = np.array(Image.open(path));
+    img = Image.open(path)    
+    
+    # face location
+    x, y, w, h = detect_face(np.array(img));
+    
+    flag = 1 if w > 0 else 0;
+
+    if flag == 0:
+        return None, flag
+
+    # Convert image to array
+    X = np.array(img);
+
+    # Cropping
+    X = X[x:x+w, y:y+h, :]
 
     # Pixel normalization
     X = X / 255. # Pixel normaliztion
-
-    # Convert to gray_scale image
-    # X = tf.image.rgb_to_grayscale(X)
 
     # Apply augmentation
     if augment:
@@ -62,9 +96,9 @@ def pipeline(
     # Resize X to network's input's shape
     X = resize(X, input_size)
 
-    # X = np.expand_dims(X, 0);
 
-    return X
+
+    return X, flag
 
 
 if __name__ == "__main__":
@@ -80,4 +114,6 @@ if __name__ == "__main__":
         random_contrast_factor = 0.5,
         flip_mode = "horizontal_and_vertical");
     plt.imshow(X);
-    plt.show();
+    plt.savefig("test.png");
+    # plt.show();
+

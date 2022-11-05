@@ -1,5 +1,5 @@
 DEV:
-	echo "[+] This is DEV"
+	python src/pipeline.py
 
 exp1_knn: 
 	python src/knn.py --PATH datasets/lfw_selection \
@@ -10,7 +10,7 @@ exp1_knn:
 
 exp1_train:	
 	python src --PATH datasets/lfw_selection \
-		--BATCH_SIZE 158\
+		--BATCH_SIZE 316\
 	   	--SHAPE 200 200 3 \
 		--BACKBONE inception_v3\
 		--EMBEDDING_SIZE 128\

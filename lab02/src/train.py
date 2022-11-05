@@ -1,6 +1,6 @@
 from typing import List
 
-from pipeline import pipeline
+# from pipeline import pipeline
 from net import Backbone, SiameseNet
 from dataset import get_dataset
 from matplotlib import pyplot as plt
