@@ -39,7 +39,6 @@ def detect_face(img):
             minSize=(30, 30),
             #flags = cv2.CV_HAAR_SCALE_IMAGE
             )
-
     _x, _y, _W, _H = 0, 0, 0, 0;
 
     # Return the largest face
@@ -48,9 +47,6 @@ def detect_face(img):
             _x, _y, _W, _H = x, y, w, h;
 
     return _x, _y, _W, _H
-
-
-
 
 def pipeline(
         path                    : str,
