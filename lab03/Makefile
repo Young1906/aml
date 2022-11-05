@@ -11,7 +11,7 @@ BUILD:
 
 RUN:
 	docker run  \
-		-v $(DIR):/usr/src/app \
+		-v $(pwd):/usr/src/app \
 		-t $(TAG)
 
 # EXPERIMENT

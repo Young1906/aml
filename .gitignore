@@ -3,4 +3,6 @@ datasets/
 **/dataset/*.*
 **/__pycache__
 **/checkpoints
+**/logs/
+**/log/
 

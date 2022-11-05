@@ -1,6 +1,8 @@
 FROM tensorflow/tensorflow:latest-gpu
 
 WORKDIR /usr/src/app
-RUN pip install Pillow matplotlib tqdm
+COPY reqs.txt .
+RUN pip install -r reqs.txt
+
 
 CMD ["make", "exp1"]

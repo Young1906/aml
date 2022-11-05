@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
-import os
+import os, datetime
 
 def train(
         path                : str,                  # Path to dataset
@@ -50,12 +50,10 @@ def train(
                 input_size      = batched_input_shape);
 
 
-        # History object
-        hist = {
-            "loss": {
-                "train" : [],
-            },
-        }
+        # tf log
+        current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S");
+        log_dir = f"logs/{current_time}/train"
+        summary_writer = tf.summary.create_file_writer(log_dir);
 
         # create dataset from generator
         ds = tf.data.Dataset.from_generator(
@@ -67,6 +65,8 @@ def train(
                    ));
         ds = ds.batch(batch_size_ds);
 
+        # Global step counter
+        gstep = 0;
 
         # Main training loop
         pbar = tqdm(range(epoch));
@@ -75,8 +75,8 @@ def train(
             pbar.set_description(f"Epoch {e:2d}");
 
             b_pbar = tqdm(ds) # batch progress bar
+            b = 0; #Batch counter
 
-            b = 1; #Batch counter
             for (a, p, n) in b_pbar:
                 
                 # DEV
@@ -85,15 +85,16 @@ def train(
                 with tf.GradientTape() as tape:
                     loss = siamese(a, p, n);
 
-                b_pbar.set_description(f"\t Batch {b:2d} - Loss {loss.numpy():.3f}");
+                # b_pbar.set_description(f"\t Batch {b:2d} - Loss {loss.numpy():.3f}");
+                with summary_writer.as_default():
+                    tf.summary.scalar("train_loss", loss.numpy(), step = gstep);
 
                 # Gradient
                 grads = tape.gradient(loss, siamese.trainable_weights);
                 opt.apply_gradients(zip(grads, siamese.trainable_weights));
                 
-                hist["loss"]["train"].append(loss.numpy());
-
+                # hist["loss"]["train"].append(loss.numpy());
                 b+=1;
+                gstep += 1
             
-            counter = 0;
-    return hist, backbone;
+    return None, backbone;

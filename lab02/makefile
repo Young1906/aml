@@ -1,27 +1,15 @@
-train:
-	docker run --gpus all \
-		-v $(pwd):/usr/src/app/ \
-		-t tf_gpu
-
-build:
-	docker build -t tf_gpu - < dockerfile 
-
-build_cpu:
-	docker build -t tf_cpu - < dockerfile_cpu 
-
-exp2: 
-	make train_exp2 
-	make knn_exp2 
+DEV:
+	echo "[+] This is DEV"
 
 exp1_knn: 
-	python3 src/knn.py --PATH datasets/lfw_selection \
+	python src/knn.py --PATH datasets/lfw_selection \
 	   	--SHAPE 200 200 3 \
 		--BACKBONE inception_v3\
 		--EMBEDDING_SIZE 128\
 		--CHECKPOINT checkpoints/inception_v3
 
-exp1_main:	
-	python3 src --PATH datasets/lfw_selection \
+exp1_train:	
+	python src --PATH datasets/lfw_selection \
 		--BATCH_SIZE 158\
 	   	--SHAPE 200 200 3 \
 		--BACKBONE inception_v3\
@@ -34,6 +22,7 @@ exp1_main:
 
 analysis:
 	python3 src/analysis.py
+
 dev:
 	DEV=1 python3 src --PATH datasets/lfw_selection \
 		--BATCH_SIZE 256 \

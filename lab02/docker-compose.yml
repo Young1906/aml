@@ -1,0 +1,30 @@
+version: "3.7"
+
+x-common-variables: &common-variables
+  DEV=1
+
+services:
+  train:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
+    command: make exp1_train 
+
+    # https://stackoverflow.com/questions/70761192/docker-compose-equivalent-of-docker-run-gpu-all-option
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  tfboard:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
+    command: tensorboard --logdir logs/ --host 0.0.0.0 --port=6006
+    ports:
+      - 6006:6006

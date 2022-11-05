@@ -62,7 +62,7 @@ parser.add_argument(
 args = parser.parse_args();
 
 if __name__ == "__main__":
-    hist, backbone = train(
+    _, backbone = train(
             path                = args.PATH,
             batch_size          = args.BATCH_SIZE,  
             input_shape         = args.SHAPE,
@@ -74,19 +74,19 @@ if __name__ == "__main__":
             n_valid             = args.N_VALID,
             learning_rate       = args.LEARNING_RATE)
 
-    plt.plot(hist["loss"]["train"]);
-    plt.title("Train Loss by Batch");
-    plt.savefig("train_loss.png");
+    # plt.plot(hist["loss"]["train"]);
+    # plt.title("Train Loss by Batch");
+    # plt.savefig("train_loss.png");
 
-    plt.clf();
+    # plt.clf();
 
-    plt.plot(hist["loss"]["valid"]);
-    plt.title("Validation Loss by Epoch")
-    plt.savefig("valid_loss.png");
+    # plt.plot(hist["loss"]["valid"]);
+    # plt.title("Validation Loss by Epoch")
+    # plt.savefig("valid_loss.png");
 
     # Save loss object
-    with open("hist.pkl", "wb") as f:
-        pickle.dump(hist, f);
+    # with open("hist.pkl", "wb") as f:
+    #    pickle.dump(hist, f);
 
     backbone.save_weights(f"checkpoints/{args.BACKBONE}");
 
