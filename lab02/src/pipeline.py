@@ -4,6 +4,7 @@ from PIL import Image
 from typing import List
 import cfg
 from matplotlib import pyplot as plt
+import cv2
 
 def resize(
         X                       : tf.Tensor,

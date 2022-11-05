@@ -4,5 +4,5 @@ WORKDIR /usr/src/app
 COPY reqs.txt .
 RUN pip install -r reqs.txt
 
-
-CMD ["make", "exp1"]
+# CV2 
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
