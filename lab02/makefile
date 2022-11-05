@@ -13,43 +13,25 @@ exp2:
 	make train_exp2 
 	make knn_exp2 
 
-knn_exp2: 
+exp1_knn: 
 	python3 src/knn.py --PATH datasets/lfw_selection \
-	   	--SHAPE 255 255 3 \
-		--BACKBONE mobilenet_v2\
-		--EMBEDDING_SIZE 64 \
+	   	--SHAPE 200 200 3 \
+		--BACKBONE inception_v3\
+		--EMBEDDING_SIZE 128\
 		--CHECKPOINT checkpoints/inception_v3
 
-train_exp2:	
+exp1_main:	
 	python3 src --PATH datasets/lfw_selection \
-		--BATCH_SIZE 512\
-	   	--SHAPE 255 255 3 \
-		--BACKBONE mobilenet_v2\
-		--EMBEDDING_SIZE 64 \
+		--BATCH_SIZE 158\
+	   	--SHAPE 200 200 3 \
+		--BACKBONE inception_v3\
+		--EMBEDDING_SIZE 128\
 		--MARGIN .5 \
 		--BATCH_SIZE_DS 32\
 		--EPOCH 15 \
 		--N_VALID 256 \
 		--LEARNING_RATE 0.001
 
-knn_exp1: 
-	python3 src/knn.py --PATH datasets/lfw_selection \
-	   	--SHAPE 255 255 3 \
-		--BACKBONE inception_v3\
-		--EMBEDDING_SIZE 64 \
-		--CHECKPOINT checkpoints/inception_v3
-
-exp1:	
-	python3 src --PATH datasets/lfw_selection \
-		--BATCH_SIZE 512\
-	   	--SHAPE 255 255 3 \
-		--BACKBONE inception_v3\
-		--EMBEDDING_SIZE 64 \
-		--MARGIN .5 \
-		--BATCH_SIZE_DS 32\
-		--EPOCH 5 \
-		--N_VALID 256 \
-		--LEARNING_RATE 0.001
 analysis:
 	python3 src/analysis.py
 dev:

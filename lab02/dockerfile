@@ -3,4 +3,4 @@ FROM tensorflow/tensorflow:latest-gpu
 WORKDIR /usr/src/app
 RUN pip install Pillow matplotlib tqdm
 
-CMD ["make", "exp2"]
+CMD ["make", "exp1"]

@@ -37,7 +37,7 @@ def train(
                 backbone        = backbone);
 
         # optimizer
-        opt = tf.keras.optimizers.SGD(learning_rate = learning_rate)
+        opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)
 
         # dataset
         # input_shape with batch
