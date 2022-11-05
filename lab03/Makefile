@@ -4,7 +4,7 @@ DIR=/home/iamtu/codes/aml/lab03
 # DOCKER 
 # --------------------------------------------------------------------------------
 DEV:
-	make DOCKER=cpu_docker BUILD RUN
+	DEV=1 python src
 
 BUILD:
 	docker build -t $(TAG) -f $(DOCKER) .
